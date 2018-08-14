@@ -1,0 +1,121 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".login"
+    android:orientation="vertical"
+    android:weightSum="100.0"
+    android:background="#ff9033"
+    android:id="@+id/loginpage">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="90.0"
+        android:paddingTop="20dp"
+        android:orientation="vertical"
+        android:id="@+id/layer2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:text="User Id*"
+                android:textColor="#000000"
+                android:id="@+id/textView1"
+                android:textSize="20px"
+
+                />
+
+            <EditText
+                android:layout_width="5dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:inputType="text"
+                android:ems="10"
+                android:focusable="true"
+                android:digits="a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z, ,"
+                android:id="@+id/username"
+                android:textColor="#000000"
+                android:textSize="20px"
+                android:maxLength="8"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/border_style"
+
+                android:lines="1"
+
+                />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:text="Password*"
+                android:textColor="#000000"
+                android:id="@+id/textView2"
+                android:textSize="20px"
+
+                />
+
+            <EditText
+                android:layout_width="5dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:inputType="numberPassword"
+                android:textColor="#000000"
+                android:ems="10"
+                android:maxLength="8"
+                android:id="@+id/userpassword"
+                android:textSize="20px"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/border_style"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8.0"
+        android:orientation="horizontal"
+        android:id="@+id/layer3">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="LOGIN"
+            android:id="@+id/loginbutton"
+            android:textColor="#000000"
+            android:layout_gravity="center"
+            android:background="@drawable/button_background"
+            android:layout_weight="5.0"
+            android:textSize="20dp"
+            android:paddingBottom="15dp" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

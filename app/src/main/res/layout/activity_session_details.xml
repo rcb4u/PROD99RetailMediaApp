@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.RSPL.MEDIA.Doc990.SessionDetails"
+    android:orientation="vertical"
+    android:background="#ffffff"
+    android:weightSum="100.0">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="8.0"
+        android:layout_marginTop="5dp">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BACK"
+            android:id="@+id/back"
+            android:src="@drawable/arrow"
+            android:layout_marginLeft="3dp"
+            android:layout_weight="0.1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="FILL PATIENT DETAILS"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="23dp"
+            android:layout_weight="0.8"
+            android:textColor="#000000"
+            android:layout_marginTop="8dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/error"
+            android:id="@+id/error"
+            android:layout_weight="0.2" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="15.0"
+        android:weightSum="1.0">
+
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="Dr Name "
+            android:textSize="20dp"
+            android:textColor="#FFF50D0D"
+            android:id="@+id/drName"
+            android:padding="2dp"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:layout_weight="0.2" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="Specialization  "
+            android:textSize="18dp"
+            android:padding="2dp"
+            android:layout_weight="0.2"
+            android:textColor="@color/text"
+            android:id="@+id/specialization"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="Hospital "
+            android:textSize="18dp"
+            android:padding="2dp"
+            android:layout_weight="0.4"
+            android:textColor="@color/text"
+            android:id="@+id/hospitals"
+            android:textAlignment="center" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="10.0"
+        android:weightSum="1.0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="0.7">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="Available"
+                android:textSize="18dp"
+                android:textColor="@color/text"
+                android:paddingTop="5dp"
+                android:id="@+id/availablesession"
+                android:layout_marginLeft="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textColor="@color/text"
+                android:paddingTop="5dp"
+                android:id="@+id/nextsession"
+                android:layout_marginLeft="20dp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="0.2">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="Date"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:textColor="#FFF50D0D"
+                android:paddingTop="5dp"
+                android:id="@+id/datesession"
+                android:layout_marginLeft="30dp" />
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:text="Time "
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textColor="#FFF50D0D"
+                android:paddingTop="5dp"
+                android:id="@+id/timesession"
+                android:layout_marginLeft="30dp" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <!--  <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:layout_weight="2.0"
+          android:layout_margin="5dp"
+          >
+
+          <TextView
+              android:layout_width="120dp"
+              android:layout_height="wrap_content"
+              android:text="Total Amount"
+              android:textSize="18dp"
+              android:textStyle="bold"
+              android:textColor="#000000"/>
+          <TextView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:textSize="18dp"
+              android:textStyle="bold"
+              android:layout_marginLeft="20dp"
+              android:textColor="#FFF50D0D"
+              android:id="@+id/totalamount"/>
+
+      </LinearLayout>-->
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="65.0"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="2dp">
+
+            <TextView
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="NAME"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_marginLeft="10dp" />
+
+            <Spinner
+                android:layout_width="70dp"
+                android:layout_height="25dp"
+                style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+                android:id="@+id/spintitle">
+
+            </Spinner>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/username"
+                android:textColor="@color/text"
+                android:textSize="15dp"
+                android:textAllCaps="true"
+                android:singleLine="true"
+                android:inputType="text"
+                android:maxLength="30"
+                android:hint="Name- Required"
+                android:layout_marginLeft="10dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="2dp"
+
+            >
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="PHONE"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_marginLeft="10dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/phoneno"
+                android:textSize="15dp"
+                android:maxLines="1"
+                android:textColor="@color/text"
+                android:inputType="number"
+                android:maxLength="10"
+                android:hint="Phone- Required"
+                android:layout_marginLeft="20dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="2dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="NATIONALITY"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:textColor="#000000"
+                android:layout_marginLeft="10dp" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/radioGroup">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Local"
+                    android:checked="true"
+                    android:id="@+id/localradio"
+                    android:layout_marginLeft="15dp" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Foreign"
+                    android:id="@+id/foreignradio"
+                    android:layout_marginLeft="20dp" />
+            </RadioGroup>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="2dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="NIC"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_marginLeft="10dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/nic"
+                android:textSize="15dp"
+                android:singleLine="true"
+                android:textColor="@color/text"
+                android:hint="NIC -Required"
+                android:maxLength="12"
+                android:layout_marginLeft="20dp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="2dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="PASSPORT"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_marginLeft="10dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/passport"
+                android:textSize="18dp"
+                android:singleLine="true"
+                android:maxLength="15"
+                android:textColor="@color/text"
+                android:hint="Passport-Required if no NIC"
+                android:layout_marginLeft="20dp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="2dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="EMAIL"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:layout_marginLeft="10dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:id="@+id/email"
+                android:singleLine="true"
+                android:hint="Email-Optional"
+                android:textColor="@color/text"
+                android:layout_marginLeft="20dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:gravity="center"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/continuebutton"
+                android:text="CONTINUE"
+                android:textStyle="bold"
+                android:textColor="#ffffff"
+                android:gravity="center"
+                android:textSize="18dp"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:background="@color/button" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

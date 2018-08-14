@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="100.0"
+    android:background="@android:color/white"
+    android:layout_gravity="center">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="10.0"
+        android:orientation="horizontal"
+        android:background="#ff9033"
+        android:weightSum="100">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="118dp"
+            android:layout_weight="70"
+            android:src="@drawable/frimilogo"
+            android:layout_gravity="left|center"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:text="Payment"
+            android:textAllCaps="true"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:textColor="@android:color/white"
+            android:textSize="40dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:paddingTop="2dp"
+        android:layout_weight="40.0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:weightSum="1.0"
+            android:paddingRight="20dp"
+            android:paddingTop="2dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="FriMi ID/Mobile No. "
+                android:textColor="#000000"
+                android:id="@+id/tlocalprod_mrp"
+                android:textSize="25dp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:gravity="left"
+                android:paddingLeft="20dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:inputType="number"
+                android:ems="10"
+                android:maxLength="10"
+                android:textColor="#000000"
+                android:id="@+id/frimi_test_Wallet_ID"
+                android:textSize="20dp"
+                android:hint="Enter FriMi ID/Mobile No."
+                android:layout_gravity="center"
+                android:layout_margin="16dp"
+                android:background="@drawable/border_style" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="2dp"
+            android:weightSum="1.0"
+            android:paddingRight="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="Amount "
+                android:textStyle="bold"
+                android:textSize="25dp"
+                android:textColor="#000000"
+                android:id="@+id/localpro_barcode"
+                android:gravity="center"
+                android:paddingLeft="20dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:inputType="numberDecimal"
+                android:ems="10"
+                android:textColor="#000000"
+                android:textSize="20dp"
+                android:text="20"
+                android:hint="Amount Paying"
+                android:layout_margin="16dp"
+                android:id="@+id/frimi_total_amount"
+                android:layout_gravity="center"
+                android:background="@drawable/border_style" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/buttons_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="10.0">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:text="PAY"
+            android:id="@+id/frimi_pay"
+            android:textColor="#ffffff"
+            android:textSize="15dp"
+            android:background="@drawable/shapebutton"
+            android:layout_weight="1.66" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:text="CANCEL"
+            android:id="@+id/frimi_cancel"
+            android:textColor="#ffffff"
+
+            android:textSize="15dp"
+            android:background="@drawable/shapebutton"
+            android:layout_weight="1.66" />
+
+    </LinearLayout>
+</LinearLayout>

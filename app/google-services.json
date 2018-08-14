@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "915473155248",
+    "firebase_url": "https://media-ce642.firebaseio.com",
+    "project_id": "media-ce642",
+    "storage_bucket": "media-ce642.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:915473155248:android:7cea0fb4b0094c28",
+        "android_client_info": {
+          "package_name": "com.RSPL.MEDIA"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "915473155248-2566nqsu117vi2110pjnqasg2a1smv8c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4UXUYBHyQwVNkDaEf0hIhFZvJbxY9QTw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

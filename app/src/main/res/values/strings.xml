@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">99RetailMediaApplication</string>
+
+    <string-array name="cargill_bank">
+        <item>15000-35000</item>
+        <item>35000-60000</item>
+        <item>60000-100000</item>
+        <item>100000-above</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

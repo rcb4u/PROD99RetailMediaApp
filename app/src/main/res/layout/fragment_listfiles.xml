@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="10"
+    android:background="#e6dcdc">
+
+
+    <ListView
+        android:id="@+id/filelistview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9.2" />
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.8"
+        android:weightSum="100"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnIddeleteFiles"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="50.0"
+            android:text="DELETE"
+            android:background="#949090" />
+
+        <Button
+            android:id="@+id/id_cancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="50.0"
+            android:text="CANCEL"
+            android:layout_marginLeft="10dp"
+            android:background="#949090" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

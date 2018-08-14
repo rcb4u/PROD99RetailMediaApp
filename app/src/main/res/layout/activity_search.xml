@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:weightSum="100.0">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="40.0"
+        android:weightSum="50.0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="10.0"
+            android:weightSum="1.0">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Channel Your Doctor"
+                android:textColor="#FFF50D0D"
+                android:textStyle="bold"
+                android:textSize="35dp"
+                android:layout_weight="0.8"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="15dp" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/error"
+                android:id="@+id/error"
+                android:layout_weight="0.2" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="5.0"
+            android:layout_marginBottom="10dp"
+            android:weightSum="1.0">
+
+            <AutoCompleteTextView
+                android:layout_width="0dp"
+                android:layout_weight="0.95"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:id="@+id/doctorsearch"
+                android:maxEms="20"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:selectAllOnFocus="true"
+                android:drawableLeft="@drawable/doctor_md"
+                android:hint="      Doctor-Max 6 character" />
+
+            <ProgressBar
+                android:indeterminateDrawable="@drawable/my_progress_indeterminate"
+                android:layout_height="50dp"
+                android:id="@+id/pb"
+                android:layout_width="50dp"
+                android:visibility="invisible">
+
+            </ProgressBar>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="5.0"
+            android:layout_marginBottom="10dp"
+            android:weightSum="1.0">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="0.9"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/hospital" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_weight="0.1"
+                android:layout_height="fill_parent"
+                android:id="@+id/hospitalsearch"
+                android:hint="  Any Hospital"
+                style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+                android:drawableLeft="@drawable/hospital"
+                android:drawableRight="@drawable/search"
+                android:layout_gravity="center"
+
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="5.0"
+            android:layout_marginBottom="10dp"
+            android:weightSum="1.0">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="0.9"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/spec" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_weight="0.1"
+                android:layout_height="fill_parent"
+                android:hint="     Any Specialization"
+                android:id="@+id/specializationsearch"
+                android:drawableLeft="@drawable/spec"
+                style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+                android:layout_gravity="center"
+
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="5.0"
+            android:layout_marginBottom="10dp"
+            android:weightSum="1.0">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="0.9"
+                android:layout_height="fill_parent"
+                android:drawableLeft="@drawable/dateimage" />
+
+
+            <EditText
+                android:id="@+id/datepicker"
+                android:layout_width="match_parent"
+                android:layout_weight="0.1"
+                android:layout_height="fill_parent"
+                android:singleLine="true"
+                android:focusable="false"
+                android:layout_marginLeft="5dp"
+                android:textSize="20dp"
+                android:ems="9"
+                android:hint="  Any Date"
+                android:gravity="left"
+                android:imeOptions="flagNoExtractUi"
+
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="10.0"
+            android:gravity="center">
+
+            <Button
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/searchbutton"
+                android:text="Search"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:textColor="#ffffff"
+                android:background="@color/button" />
+        </LinearLayout>
+
+        <!-- <Button
+             android:layout_width="250dp"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="30dp"
+             android:layout_gravity="center"
+             android:textSize="15dp"
+             android:textStyle="bold"
+             android:textColor="#000000"
+             android:id="@+id/generateToken"
+             android:background="@color/button"
+             android:text="Generate Token"/>-->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="60.0">
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/recyclersearch">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+</LinearLayout>
