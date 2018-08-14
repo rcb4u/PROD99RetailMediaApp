@@ -11,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -18,6 +21,7 @@ import com.google.android.gms.security.ProviderInstaller;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -52,26 +56,44 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static android.text.TextUtils.isEmpty;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GenieFragment extends Fragment {
+public class GenieFragment extends Fragment implements View.OnClickListener {
 
     private String test;
     private String formattedDate;
     private String Message;
     private String access_token;
     private int success;
+    private String externalMerchantTransactionId;
+    EditText genieID, GenieAmount;
+    TextView genieIDPrefix;
+    Button geniePay, genieCancel;
+    private String Genie_ID;
+    private String GENIE_AMOUNT;
+    private String GenieAccountNumber;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup
             container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_genie, container, false);
+        genieIDPrefix = (TextView) view.findViewById(R.id.Genie_test_Wallet_ID_Tv);
+        genieID = (EditText) view.findViewById(R.id.Genie_test_Wallet_ID);
+        GenieAmount = (EditText) view.findViewById(R.id.genie_total_amount);
+        geniePay = (Button) view.findViewById(R.id.genie_pay);
+        genieCancel = (Button) view.findViewById(R.id.genie_cancel);
 
+        geniePay.setOnClickListener(this);
+        genieCancel.setOnClickListener(this);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         formattedDate = dateFormat.format(new Date()).toString();
         System.out.println(formattedDate);
+        Long tsLong = System.currentTimeMillis() / 10;
+        externalMerchantTransactionId = "99" + tsLong.toString();
         TokenGenerationProcess();
         return view;
     }
@@ -112,14 +134,6 @@ public class GenieFragment extends Fragment {
                     test = response.body().string();
                     if (response.isSuccessful()) {
                         success = response.code();
-
-                        Headers responseHeaders = response.headers();
-                        for (int i = 0; i < responseHeaders.size(); i++) {
-
-                            System.out.println(responseHeaders.name(i)
-                                    + ": " + responseHeaders.value(i));
-                        }
-
                         System.out.println(test);
                         try {
                             JSONObject jsonObject = new JSONObject(test);
@@ -157,12 +171,10 @@ public class GenieFragment extends Fragment {
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
                 progressDialog.dismiss();
-                CallingAPIProcess();
             }
         }
         WaitingforResponse WaitingforResponse = new WaitingforResponse();
         WaitingforResponse.execute();
-
     }
 
     public X509TrustManager provideX509TrustManager() {
@@ -201,61 +213,11 @@ public class GenieFragment extends Fragment {
             protected String doInBackground(Void... params) {
                 OkHttpClient client = null;
 
-           /*     client = new OkHttpClient.Builder()
-                        .connectTimeout(120, TimeUnit.SECONDS)
-                        .writeTimeout(120, TimeUnit.SECONDS)
-                        .readTimeout(120, TimeUnit.SECONDS)
-                        .build();*/
-                try {
-                    client = new OkHttpClient.Builder()
-                            .connectTimeout(300, TimeUnit.SECONDS)
-                            .writeTimeout(300, TimeUnit.SECONDS)
-                            .readTimeout(300, TimeUnit.SECONDS)
-                            .sslSocketFactory(new Tls12SocketFactory(), provideX509TrustManager())
-                            .build();
-                } catch (KeyManagementException e) {
-                    e.printStackTrace();
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                }
-                TrustManagerFactory trustManagerFactory = null;
-                try {
-                    trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    trustManagerFactory.init((KeyStore) null);
-                } catch (KeyStoreException e) {
-                    e.printStackTrace();
-                }
-                TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
-                if (trustManagers.length != 1 || !(trustManagers[0] instanceof X509TrustManager)) {
-                    throw new IllegalStateException("Unexpected default trust managers:"
-                            + Arrays.toString(trustManagers));
-                }
-                X509TrustManager trustManager = (X509TrustManager) trustManagers[0];
-
-                SSLContext sslContext = null;
-                try {
-                    sslContext = SSLContext.getInstance("TLS");
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    sslContext.init(null, new TrustManager[]{trustManager}, null);
-                } catch (KeyManagementException e) {
-                    e.printStackTrace();
-                }
-                SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-
                 client = new OkHttpClient.Builder()
                         .connectTimeout(120, TimeUnit.SECONDS)
                         .writeTimeout(120, TimeUnit.SECONDS)
                         .readTimeout(120, TimeUnit.SECONDS)
-                        .sslSocketFactory(sslSocketFactory, trustManager)
                         .build();
-
                 MediaType mediaType = MediaType.parse("application/json");
 
                 Log.e("Body", "" + bodyin());
@@ -309,7 +271,7 @@ public class GenieFragment extends Fragment {
                 "   \"request\":{  \n" +
                 "      \"genieAccountNumber\":\"+94715109942\",\n" +
                 "      \"merchantPgIdentifier\":\"PG00008372\",\n" +
-                "      \"externalMerchantTransactionId\":\"2567\",\n" +
+                "      \"externalMerchantTransactionId\":\"" + externalMerchantTransactionId + "\",\n" +
                 "      \"chargeTotal\":70,\n" +
                 "      \"counterId\":61,\n" +
                 "      \"invoiceNumber\":\"1\",\n" +
@@ -317,57 +279,84 @@ public class GenieFragment extends Fragment {
                 "      \"paymentReference\":\"reference\"\n" +
                 "   }\n" +
                 "}";
+
+        // GenieAccountNumber="+94715109942";
     }
-}
-    /*SSLContext sslcontext = null;
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.genie_pay:
+                // GenieAccountNumber="+94715109942";
+                Genie_ID = genieID.getText().toString();
+                GENIE_AMOUNT = GenieAmount.getText().toString();
+                if (isEmpty(Genie_ID)) {
+                    genieID.setError("Please enter 10 digit FriMi ID/Mobile No.");
+                } else if (isEmpty(GENIE_AMOUNT)) {
+                    GenieAmount.setError("Amount can't be null");
+                } else if (GenieAmount.getText().length() < 1) {
+                    GenieAmount.setError("Amount can't be 0");
+                } else if (genieID.getText().length() != 10) {
+                    genieID.setError("Please enter 10 digit FriMi ID/Mobile No.");
+                } else {
+                    // writeInsertDatafrimi(FRIMI_TEST_WALLET_ID, FRIMI_AMOUNT);
+                    GenieAccountNumber = genieIDPrefix.getText().toString() + Genie_ID;
+                    CallingAPIProcess();
+                }
+                break;
+            case R.id.genie_cancel:
+                //getActivity().getFragmentManager().beginTransaction().remove(this).commit();
+                getActivity().getFragmentManager().popBackStack();
+                break;
+        }
+    }
+}     /*try {
+                    client = new OkHttpClient.Builder()
+                            .connectTimeout(300, TimeUnit.SECONDS)
+                            .writeTimeout(300, TimeUnit.SECONDS)
+                            .readTimeout(300, TimeUnit.SECONDS)
+                            .sslSocketFactory(new Tls12SocketFactory(), provideX509TrustManager())
+                            .build();
+                } catch (KeyManagementException e) {
+                    e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+                TrustManagerFactory trustManagerFactory = null;
                 try {
-                        ProviderInstaller.installIfNeeded(getActivity());
-                        } catch (GooglePlayServicesRepairableException e) {
-                        e.printStackTrace();
-                        } catch (GooglePlayServicesNotAvailableException e) {
-                        e.printStackTrace();
-                        }
-                        try {
-                        SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-                        sslContext.init(null, null, null);
-                        SSLEngine engine = sslContext.createSSLEngine();
-                        } catch (NoSuchAlgorithmException e) {
+                    trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    trustManagerFactory.init((KeyStore) null);
+                } catch (KeyStoreException e) {
+                    e.printStackTrace();
+                }
+                TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
+                if (trustManagers.length != 1 || !(trustManagers[0] instanceof X509TrustManager)) {
+                    throw new IllegalStateException("Unexpected default trust managers:"
+                            + Arrays.toString(trustManagers));
+                }
+                X509TrustManager trustManager = (X509TrustManager) trustManagers[0];
 
-                        } catch (KeyManagementException e) {
-                        e.printStackTrace();
-                        }
-                        SSLSocketFactory NoSSLv3Factory = new NoSSLv3SocketFactory(sslcontext.getSocketFactory());
+                SSLContext sslContext = null;
+                try {
+                    sslContext = SSLContext.getInstance("TLS");
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    sslContext.init(null, new TrustManager[]{trustManager}, null);
+                } catch (KeyManagementException e) {
+                    e.printStackTrace();
+                }
+                SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
-                        HttpsURLConnection.setDefaultSSLSocketFactory(NoSSLv3Factory);
-                        try {
-                        URL l_url= null;
-                        l_url = new URL("https://services.axis.dialog.lk:4080/axipay/external/merchant/transaction/initiate/push");
-                        HttpsURLConnection urlConnection = (HttpsURLConnection) l_url.openConnection();
-                        urlConnection.setRequestProperty("Content-Type", "application/json;");
-                        urlConnection.setRequestProperty("X-IH-SECRETCODE","4ecb71e43cda4910a9f651f7d4600e12");
-                        urlConnection.setRequestProperty("X-IH-PSW", "Think100%");
-                        urlConnection.setRequestProperty("Authorization","Bearer "+access_token);
-                        urlConnection.setSSLSocketFactory(NoSSLv3Factory);
-                        urlConnection.setRequestMethod("POST");
-                        OutputStream os = urlConnection.getOutputStream();
-                        os.write(bodyin().getBytes());
-                        os.flush();
-                        if (urlConnection.getResponseCode() == HttpsURLConnection.HTTP_OK) {
-                        InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                        StringBuilder result = new StringBuilder();
-                        result.append(line);
-                        JSONObject readers = new JSONObject(result.toString());
-                        Log.e("GetMovies", String.valueOf(readers));
-
-                        }
-                        }
-                        }catch (MalformedURLException e) {
-                        e.printStackTrace();
-                        } catch (IOException e) {
-                        e.printStackTrace();
-                        } catch (JSONException e) {
-                        e.printStackTrace();
-                        }*/
+                client = new OkHttpClient.Builder()
+                        .connectTimeout(120, TimeUnit.SECONDS)
+                        .writeTimeout(120, TimeUnit.SECONDS)
+                        .readTimeout(120, TimeUnit.SECONDS)
+                        .sslSocketFactory(sslSocketFactory, trustManager)
+                        .build();
+*/

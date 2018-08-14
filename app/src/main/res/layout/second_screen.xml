@@ -146,10 +146,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="10.0"
             android:id="@+id/testingimage10"
-            android:src="@drawable/docx"
+            android:src="@drawable/genie"
             android:scaleType="fitXY"
-            android:paddingRight="30dp"
-            android:paddingLeft="25dp"
             android:background="@drawable/border_pics"
             android:adjustViewBounds="true" />
 

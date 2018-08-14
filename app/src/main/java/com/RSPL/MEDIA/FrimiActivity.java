@@ -400,15 +400,15 @@ public class FrimiActivity extends Fragment {
         // Frimi_amount.getText().toString().startsWith("1");
 
         if (isEmpty(FRIMI_TEST_WALLET_ID)) {
-            Frimi_Test_Wallet_id.setError("Pleaae enter 10 digit FriMi ID/Mobile No.");
+            Frimi_Test_Wallet_id.setError("Please enter 10 digit FriMi ID/Mobile No.");
             //Toast tost = Toast.makeText(this, "Enter mobile", Toast.LENGTH_LONG);
             //tost.show();
         } else if (isEmpty(FRIMI_AMOUNT)) {
-            Frimi_amount.setError("Amount can't ne null");
+            Frimi_amount.setError("Amount can't be null");
         } else if (Frimi_amount.getText().length() < 1) {
             Frimi_amount.setError("Amount can't be 0");
         } else if (Frimi_Test_Wallet_id.getText().length() != 10) {
-            Frimi_Test_Wallet_id.setError("Pleaae enter 10 digit FriMi ID/Mobile No.");
+            Frimi_Test_Wallet_id.setError("Please enter 10 digit FriMi ID/Mobile No.");
         } else {
             writeInsertDatafrimi(FRIMI_TEST_WALLET_ID, FRIMI_AMOUNT);
             CallingAPIProcess();
