@@ -1,6 +1,8 @@
 package com.RSPL.MEDIA;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,11 +15,17 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.security.ProviderInstaller;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,20 +83,28 @@ public class GenieFragment extends Fragment implements View.OnClickListener {
     private String Genie_ID;
     private String GENIE_AMOUNT;
     private String GenieAccountNumber;
+    private AlertDialog.Builder dialog;
+    private AlertDialog geinedialog;
+    private Response response;
+    private String genieTransactionId;
+    private String status;
+    private String responsestring;
+    private String qrEncryptedText;
+    private ImageView QrImage;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup
             container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_genie, container, false);
-        genieIDPrefix = (TextView) view.findViewById(R.id.Genie_test_Wallet_ID_Tv);
+        QrImage = (ImageView) view.findViewById(R.id.QrimageView);
+       /* genieIDPrefix = (TextView) view.findViewById(R.id.Genie_test_Wallet_ID_Tv);
         genieID = (EditText) view.findViewById(R.id.Genie_test_Wallet_ID);
         GenieAmount = (EditText) view.findViewById(R.id.genie_total_amount);
         geniePay = (Button) view.findViewById(R.id.genie_pay);
         genieCancel = (Button) view.findViewById(R.id.genie_cancel);
-
         geniePay.setOnClickListener(this);
-        genieCancel.setOnClickListener(this);
+        genieCancel.setOnClickListener(this);*/
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         formattedDate = dateFormat.format(new Date()).toString();
         System.out.println(formattedDate);
@@ -97,7 +113,6 @@ public class GenieFragment extends Fragment implements View.OnClickListener {
         TokenGenerationProcess();
         return view;
     }
-
     public void TokenGenerationProcess() {
         class WaitingforResponse extends AsyncTask<Void, Void, String> {
             ProgressDialog progressDialog;
@@ -171,26 +186,12 @@ public class GenieFragment extends Fragment implements View.OnClickListener {
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
                 progressDialog.dismiss();
+                CallingAPIProcess();
             }
         }
         WaitingforResponse WaitingforResponse = new WaitingforResponse();
         WaitingforResponse.execute();
     }
-
-    public X509TrustManager provideX509TrustManager() {
-        try {
-            TrustManagerFactory factory =
-                    TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            factory.init((KeyStore) null);
-            TrustManager[] trustManagers = factory.getTrustManagers();
-            return (X509TrustManager) trustManagers[0];
-        } catch (NoSuchAlgorithmException | KeyStoreException exception) {
-            Log.e(getClass().getSimpleName(), "not trust manager available", exception);
-        }
-
-        return null;
-    }
-
     private void CallingAPIProcess() {
         class WaitingforResponse extends AsyncTask<Void, Void, String> {
             ProgressDialog progressDialog;
@@ -225,7 +226,8 @@ public class GenieFragment extends Fragment implements View.OnClickListener {
                 RequestBody body = RequestBody.create(mediaType, json);
                 Request request = new Request.Builder()
                         // .url("https://services.axis.dialog.lk:4080/axipay/external/merchant/transaction/initiate/push")
-                        .url("https://ideabiz.lk/apicall/geniepos/v1/axipay/external/merchant/transaction/initiate/push")
+                        //https://ideabiz.lk/apicall/geniepos/v1/axipay/external/merchant/transaction/initiate/push
+                        .url("https://ideabiz.lk/apicall/geniepos/v1/axipay/external/merchant/transaction/initiate/qr")
                         .addHeader("content-type", "application/json")
                         .addHeader("X-IH-SECRETCODE", "4ecb71e43cda4910a9f651f7d4600e12")
                         // .addHeader("X-IH-SECRETCODE","063357ce07d845e3925278cb5da2c975")
@@ -235,7 +237,7 @@ public class GenieFragment extends Fragment implements View.OnClickListener {
                         .build();
 
                 try {
-                    Response response = client.newCall(request).execute();
+                    response = client.newCall(request).execute();
                     test = response.body().string();
                     if (response.isSuccessful()) {
                         System.out.println("Im in tst:: " + test);
@@ -260,6 +262,52 @@ public class GenieFragment extends Fragment implements View.OnClickListener {
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
                 progressDialog.dismiss();
+                try {
+                    if (response.code() == 200) {
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(test);
+
+                            Log.e("response", "" + jsonObject.get("response"));
+                            responsestring = String.valueOf(jsonObject.get("response"));
+                            JSONObject opt = new JSONObject(responsestring);
+                            status = opt.getString("status");
+                            Message = String.valueOf(opt.get("message"));
+                            genieTransactionId = opt.getString("genieTransactionId");
+                            qrEncryptedText = opt.getString("qrEncryptedText");
+
+                            Log.e(" im before", status);
+                            if (status.matches("success")) {
+                                Log.e(" im in output", "" + status);
+                                //   OutPutMessage();
+                                MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+                                try {
+                                    BitMatrix bitMatrix = multiFormatWriter.encode(qrEncryptedText, BarcodeFormat.QR_CODE, 200, 200);
+                                    BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                                    Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+                                    QrImage.setImageBitmap(bitmap);
+                                } catch (WriterException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        android.widget.Toast.makeText(getActivity(), "No response from server.",
+                                android.widget.Toast.LENGTH_SHORT).show();
+                        Message = response.message();
+                        OutPutMessage();
+                    }
+                } catch (NullPointerException e) {
+                    android.widget.Toast.makeText(getActivity(), "No response from server.",
+                            android.widget.Toast.LENGTH_SHORT).show();
+                    Message = "No response from server.";
+                    OutPutMessage();
+                }
             }
         }
         WaitingforResponse WaitingforResponse = new WaitingforResponse();
@@ -267,7 +315,21 @@ public class GenieFragment extends Fragment implements View.OnClickListener {
     }
 
     public String bodyin() {
-        return "{  \n" +
+        return "{\n" +
+                "   \"request\":{\n" +
+                "      \"amount\":\"300\",\n" +
+                "      \"merchantPgIdentifier\":\"PG00008372\",\n" +
+                "      \"externalMerchantTransactionId\":\"" + externalMerchantTransactionId + "\",\n" +
+                "      \"description\":\"this is a test Item\",\n" +
+                "      \"invoiceNumber\":\"1234\",\n" +
+                "      \"counterId\":61,\n" +
+                "      \"transactionDateTime\":\"" + formattedDate + "\"\n" +
+                "   }\n" +
+                "}";
+
+        // GenieAccountNumber="+94715109942";
+        //below code for initialise push
+    /*    return "{  \n" +
                 "   \"request\":{  \n" +
                 "      \"genieAccountNumber\":\"+94715109942\",\n" +
                 "      \"merchantPgIdentifier\":\"PG00008372\",\n" +
@@ -278,15 +340,13 @@ public class GenieFragment extends Fragment implements View.OnClickListener {
                 "      \"transactionDateTime\":\"" + formattedDate + "\",\n" +
                 "      \"paymentReference\":\"reference\"\n" +
                 "   }\n" +
-                "}";
-
-        // GenieAccountNumber="+94715109942";
+                "}";*/
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.genie_pay:
+            /*case R.id.genie_pay:
                 // GenieAccountNumber="+94715109942";
                 Genie_ID = genieID.getText().toString();
                 GENIE_AMOUNT = GenieAmount.getText().toString();
@@ -305,58 +365,44 @@ public class GenieFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.genie_cancel:
-                //getActivity().getFragmentManager().beginTransaction().remove(this).commit();
-                getActivity().getFragmentManager().popBackStack();
-                break;
+                getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+                break;*/
         }
     }
-}     /*try {
-                    client = new OkHttpClient.Builder()
-                            .connectTimeout(300, TimeUnit.SECONDS)
-                            .writeTimeout(300, TimeUnit.SECONDS)
-                            .readTimeout(300, TimeUnit.SECONDS)
-                            .sslSocketFactory(new Tls12SocketFactory(), provideX509TrustManager())
-                            .build();
-                } catch (KeyManagementException e) {
-                    e.printStackTrace();
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                }
-                TrustManagerFactory trustManagerFactory = null;
-                try {
-                    trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    trustManagerFactory.init((KeyStore) null);
-                } catch (KeyStoreException e) {
-                    e.printStackTrace();
-                }
-                TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
-                if (trustManagers.length != 1 || !(trustManagers[0] instanceof X509TrustManager)) {
-                    throw new IllegalStateException("Unexpected default trust managers:"
-                            + Arrays.toString(trustManagers));
-                }
-                X509TrustManager trustManager = (X509TrustManager) trustManagers[0];
 
-                SSLContext sslContext = null;
-                try {
-                    sslContext = SSLContext.getInstance("TLS");
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    sslContext.init(null, new TrustManager[]{trustManager}, null);
-                } catch (KeyManagementException e) {
-                    e.printStackTrace();
-                }
-                SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+    public void OutPutMessage() {
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        final View PayForGoodsProcess = inflater.inflate(R.layout.genieresponsedisplaylayout, null);
+        dialog = new AlertDialog.Builder(getActivity());
+        TextView Frim_Response_Message = (TextView) PayForGoodsProcess.findViewById(R.id.responseText);
+        Button OKBtn = (Button) PayForGoodsProcess.findViewById(R.id.Okbutton);
+        geinedialog = dialog.create();
+        geinedialog.setTitle("          MAKING THINGS SIMPLE...");
+        try {
+            String s = Message;
+            // System.out.println();
+            Frim_Response_Message.setText(s);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        geinedialog.setView(PayForGoodsProcess);
+        geinedialog.show();
+        WindowManager.LayoutParams wmlp = geinedialog.getWindow().getAttributes();
+        wmlp.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
+        wmlp.height = 700;
+        wmlp.width = 400;
+        geinedialog.getWindow().setAttributes(wmlp);
 
-                client = new OkHttpClient.Builder()
-                        .connectTimeout(120, TimeUnit.SECONDS)
-                        .writeTimeout(120, TimeUnit.SECONDS)
-                        .readTimeout(120, TimeUnit.SECONDS)
-                        .sslSocketFactory(sslSocketFactory, trustManager)
-                        .build();
-*/
+        geinedialog.setCanceledOnTouchOutside(false);
+
+        OKBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // writeUpdateDatafrimi(FRIMI_TEST_WALLET_ID, FRIMI_AMOUNT);
+                geinedialog.dismiss();
+                getActivity().getSupportFragmentManager().beginTransaction().remove(GenieFragment.this).commit();
+            }
+        });
+    }
+
+}
