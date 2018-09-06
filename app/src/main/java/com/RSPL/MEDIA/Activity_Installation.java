@@ -420,15 +420,9 @@ public class Activity_Installation extends Activity implements OnClickListener, 
 
         } catch (Exception e) {
             Log.e("exception", e.toString());
-
-
         }
-
-
         //SystemClock.sleep(10000);
-
         // SystemClock.sleep(10000);
-
         /*need to be uncomment*/
 
         Toast.makeText(getApplicationContext(), "Tables Created", Toast.LENGTH_LONG).show();

@@ -55,6 +55,7 @@
             android:name="io.fabric.ApiKey"
             android:value="28a44215da163a42a9690eb01c89647929272b87" />
 
+
         <activity
             android:name=".MediaMainScreen"
             android:screenOrientation="landscape" />
@@ -117,7 +118,7 @@
             android:syncable="true" />
 
         <activity android:name=".FrimiActivity" />
-        <activity android:name=".NumberTextWatcher"></activity>
+
     </application>
 
 </manifest>

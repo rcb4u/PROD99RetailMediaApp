@@ -102,77 +102,65 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class MediaMainScreen extends AppCompatActivity
-        implements Runnable, ConnectivityReceiver.ConnectivityReceiverListener,
-        Callback<ConfigItems> {
-
-    DBhelper db = new DBhelper(this);
-
-    public static Bundle b = new Bundle();
-    public String Message_Testing_Data_Transfer;
-
+public class MediaMainScreen extends AppCompatActivity implements Runnable, ConnectivityReceiver.ConnectivityReceiverListener, Callback<ConfigItems> {
     public static final int MESSAGE_FROM_SERIAL_PORT = 0;
-    private static final String TAG = "BluetoothChat";
     public static final String SERIAL_PORT_MESSAGE = "";
-    public static SerialPortHelper mSerialPortHelper;
-    private Timer scrollTimer = null;
-    private int scrollPos = 0;
-    private int scrollMax;
-    public String Ad_Play, Store_id, Store_Media_Id, startdate, enddate, Str_store_id, Str_store_media_id, Cust_id, Ad_Play_Click, Store_OTP;
-    private static String starttime = null, endtime;
-    public int VIDEO_INCREMENT = 0;
-    ArrayList<Uri> main_ad_video = new ArrayList<Uri>();
-
-    public SimpleDateFormat timeFormat;
-    public SimpleDateFormat Addatetime, Addatetimeforclick;
-    ListView listView;
-    public static USBPrinter UsPrinter = USBPrinter.INSTANCE;
-    private TimerTask scrollerSchedule;
-    String videoname;
-    public static HorizontalScrollView hsv1;
-    public static LinearLayout ll1;
-    private static final String TAG_SUCCESS = "success";
-    private static final String TAG_MESSAGE = "message";
-    public static TextView GrandTotal;
-    ArrayList<VideoDetails_Model> videoDetails_Db = new ArrayList<>();
-    ArrayList<VideoDetails_Model> videoDetails_Local = new ArrayList<>();
-
-    private VideoView mVideoView;
-    TextView store_Name;
-    private AudioManager mAudManager;
-    private String mConnectedDeviceName = "";
     public static final String title_connecting = "connecting...";
     public static final String title_connected_to = "connected: ";
     public static final String title_not_connected = "not connected";
+    private static final String TAG = "BluetoothChat";
+    private static final String TAG_SUCCESS = "success";
+    private static final String TAG_MESSAGE = "message";
+    private static final String videoMailFlag = "0";
+    // Remote Config keys
+    private static final String LOADING_PHRASE_CONFIG_KEY = "loading_phrase";
+    private static final String UPDATE_MESSAGE_KEY = "update_message";
+    private static final String FINAL_STATUS_MESSAGE = "update_video_final";
+    private static final String SecondTimeVideoDownload = "true";
+    //Delete Videos
+    private static final String Delete_Video_Status = "delete_videos_status";
+    private static final String Delete_Video_Name = "delete_video_name";
+    private static final String Delete_Video = "true";
+    private static final String UPDATE_MESSAGE_KEY_TICKER = "update_ad_ticker";
+    private static final String MEDIA_ID_KEY = "Media_Id_Ad_Ticker";
+    public static Bundle b = new Bundle();
+    public static SerialPortHelper mSerialPortHelper;
+    public static USBPrinter UsPrinter = USBPrinter.INSTANCE;
+    public static HorizontalScrollView hsv1;
+    public static LinearLayout ll1;
+    public static TextView GrandTotal;
     //   public static  final String RETAILVIDEODATA="retail_videodata";
 //    public static  final String RETALMEDIACLICK="retail_media_click";
     static SecondBillAdapter adapter;
-
     static RelativeLayout relativeVideoView;
     static LinearLayout linearBillView;
     static LinearLayout mcashlayout;
     static TextView discount, netpayable, customer_name;
-
+    static int countRev = 0, countSend = 0;
+    private static String starttime = null, endtime;
+    public String Message_Testing_Data_Transfer;
+    public String Ad_Play, Store_id, Store_Media_Id, startdate, enddate, Str_store_id, Str_store_media_id, Cust_id, Ad_Play_Click, Store_OTP;
+    public int VIDEO_INCREMENT = 0;
+    public SimpleDateFormat timeFormat;
+    public SimpleDateFormat Addatetime, Addatetimeforclick;
+    public TextView mOverlapTextview;
+    public Button submitUsrRes, btnCancel;
+    public EditText editMobileNo, editcustName;
+    public TextView tvProdPriceTotal;
+    DBhelper db = new DBhelper(this);
+    ArrayList<Uri> main_ad_video = new ArrayList<Uri>();
+    ListView listView;
+    String videoname;
+    ArrayList<VideoDetails_Model> videoDetails_Db = new ArrayList<>();
+    ArrayList<VideoDetails_Model> videoDetails_Local = new ArrayList<>();
+    TextView store_Name;
     String position;
     String method;
     String quantity;
     String sprice;
-    public TextView mOverlapTextview;
-
-    private String touchOn = null;
-    private static final String videoMailFlag = "0";
-    private String AdPlayUniqueId = null;
-    private SimpleDateFormat simpleDateFormat = null;
-
-
     AlertDialog.Builder alert;
     String StoreIDForVideo;
-    public Button submitUsrRes, btnCancel;
-    public EditText editMobileNo, editcustName;
     String enteredMobNumber, enteredUserName;
-
-
-    private TextView mUpdateTextView, mDownloadTextView;
     File localFile;
     String updateMessage, mUpdateMessageDownload;
     String mDeleteVideoStatus, mDeleteVideoName;
@@ -183,74 +171,48 @@ public class MediaMainScreen extends AppCompatActivity
     String storeName;
     String updatevideomsg;
     String mUpdateVideoValue;
-    // Remote Config keys
-    private static final String LOADING_PHRASE_CONFIG_KEY = "loading_phrase";
-    private static final String UPDATE_MESSAGE_KEY = "update_message";
-    private static final String FINAL_STATUS_MESSAGE = "update_video_final";
-    private static final String SecondTimeVideoDownload = "true";
-
-    //Delete Videos
-    private static final String Delete_Video_Status = "delete_videos_status";
-    private static final String Delete_Video_Name = "delete_video_name";
-    private static final String Delete_Video = "true";
-
-
-    private ArrayList<String> field6;
-    private ArrayList<Config> data6;
     String tablename_6 = "retail_ad_ticker ";
     SQLiteDatabase myDataBase;
     SQLiteStatement insertStmt;
     SQLiteStatement updateStmt;
-
     String INSERT;
     ProgressDialog loading;
     String JSON_STRING;
-    private ArrayList list;
-
     String product;
     Float price;
     String count;
     Float total;
-
-    private TextView tvProdName;
-    private TextView tvProdPrice;
-    private TextView tvProdCount;
-    public TextView tvProdPriceTotal;
-
     String finalTotal;
     String salesprice;
     ImageButton mDataSyncBtn;
     Button btnListFiles;
-
-
-    private static final String UPDATE_MESSAGE_KEY_TICKER = "update_ad_ticker";
-    private static final String MEDIA_ID_KEY = "Media_Id_Ad_Ticker";
-
     FirebaseStorage storage = FirebaseStorage.getInstance();
     FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
     StorageReference storageRe = storage.getReferenceFromUrl("gs://media-ce642.appspot.com").child("Media.apk");
-    private DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-
-
     String updateAdfromServer, storeidvalueserver;
-    private String Addata;
     String versionName;
     PackageInfo pinfo;
     ProgressBar progress;
     String MediaId;
     String StoreName;
-
-
-    private ArrayList<Config> data59;
-    private ArrayList<String> field59;
-
     ArrayList<String> localFiles;
     String tablename_59 = "AD_MAIN";
     /*******************************************/
     String storeAddress;
     String ApkUpgrade;
     String Apk_Version;
-
+    //  private String data="";
+    int index = 0;
+    byte[] processedData;
+    List<Byte> dummyData = new ArrayList<>();
+    boolean keepProcessing = true;
+    ImageButton mButton;
+    int insertion_index = 0;
+    private Timer scrollTimer = null;
+    private int scrollPos = 0;
+    private int scrollMax;
+    private TimerTask scrollerSchedule;
+    private VideoView mVideoView;
     //unique id broadcast by service
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -284,254 +246,19 @@ public class MediaMainScreen extends AppCompatActivity
 
         }
     };
+    private AudioManager mAudManager;
+    AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+        public void onAudioFocusChange(int focusChange) {
+            if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
 
-    public Handler Handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
+            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
 
-            switch (msg.what) {
-
-                case MESSAGE_FROM_SERIAL_PORT:
-                    final String storename = msg.getData().getString(SERIAL_PORT_MESSAGE);
-                    Log.e("@@@@@@DATA", storename);
-
-
-                    if (storename.matches("")) {
-                        return;
-                    }
-                    try {
-                        JSONObject js = new JSONObject(storename);
-                        method = js.getString("Method");
-
-                        if (method.matches("Add")) {
-                            product = js.getString("Product");
-                            price = Float.valueOf(js.getString("Price"));
-                            count = js.getString("Count");
-                            total = Float.valueOf(js.getString("Total"));
-
-                            finalTotal = String.valueOf(total);
-                            salesprice = String.valueOf(price);
-
-                            tvProdName.setText(product);
-                            tvProdPrice.setText(salesprice);
-                            tvProdCount.setText(count);
-                            tvProdPriceTotal.setText(finalTotal);
-                            Log.e("%%%%%%Sales Price", salesprice);
-                            Log.e("%%%%%%Total", finalTotal);
-                        }
-
-
-                    /*if(method.matches("T")){
-                        String name=  js.getString("G");
-
-                        tvProdPriceTotal.setText(name);
-                    }*/
-
-
-                        if (method.matches("ShowBill")) {
-
-
-                            showBillAtBottom();
-
-                        }
-
-                        if (method.matches("FullScreen")) {
-
-                            fullScreenVideo();
-
-                        }
-
-
-                        if (method.matches("SPrice")) {
-                            sprice = js.getString("SPriceUpdate");
-                            total = Float.valueOf(js.getString("Total"));
-                            position = js.getString("Position");
-
-                            finalTotal = String.valueOf(total);
-                            salesprice = String.valueOf(sprice);
-
-
-                            tvProdPrice.setText(salesprice);
-
-                            tvProdPriceTotal.setText(finalTotal);
-
-                            Log.e("%%%%Sales Price", "after update" + salesprice);
-
-                            Log.e("%%%%%%Total", "after sales price update" + finalTotal);
-
-
-                        }
-
-
-                        if (method.matches("Delete")) {
-                            position = js.getString("PositionDelete");
-                            if (position != null) {
-                                deleteSalesProductfromList(Integer.parseInt(position));
-
-                                total = Float.valueOf(js.getString("Total"));
-                                count = js.getString("Count");
-                                product = js.getString("Product");
-                                price = Float.valueOf(js.getString("Price"));
-
-                                finalTotal = String.valueOf(total);
-                                salesprice = String.valueOf(price);
-                                tvProdPriceTotal.setText(finalTotal);
-                                tvProdCount.setText(count);
-                                tvProdName.setText(product);
-                                tvProdPrice.setText(salesprice);
-
-                                Log.e("%%%%%%Total", "after sales price update" + finalTotal);
-
-                            }
-
-                        }
-                        if (method.matches("FullScreen")) {
-                            fullScreenVideo();
-                        }
-                        if (method.matches("ShowBill")) {
-                            String name = js.getString("STORENAME");
-                            // showBill(name);
-                            showBillAtBottom();
-                        }
-                        if (method.matches("Mcash")) {
-                            total = Float.valueOf(js.getString("Total"));
-                            finalTotal = String.valueOf(total);
-                            tvProdPriceTotal.setText(finalTotal);
-                            Log.e("%%GrandTotal", " grandtotal for mcash" + finalTotal);
-                            mcashpayforgoods(finalTotal);
-                        }
-
-                        if (method.matches("Frimi")) {
-                            total = Float.valueOf(js.getString("Total"));
-                            finalTotal = String.valueOf(total);
-                            tvProdPriceTotal.setText(finalTotal);
-                            Log.e("%%GrandTotal", " grandtotal for mcash" + finalTotal);
-                            Frimipayments(finalTotal);
-                        }
-
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
-                    break;
-
+            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                mAudManager.abandonAudioFocus(afChangeListener);
             }
         }
     };
-
-    public void showBill(String name) {
-        try {
-
-
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
-
-            layoutParams.weight = 80.0f;
-            LinearLayout.LayoutParams layoutParams1 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
-            layoutParams1.weight = 20.0f;
-
-            relativeVideoView.setLayoutParams(layoutParams);
-            linearBillView.setLayoutParams(layoutParams1);
-
-
-            //  store_Name.setText(name);
-
-        } catch (Exception e) {
-
-        }
-    }
-
-    public void mcashpayforgoods(String name) {
-        try {
-
-            com.RSPL.MEDIA.MediaMainScreen.b.putString("Current_name", "mcash");
-            Bundle bundle = new Bundle();
-            bundle.putString("GrandTotal", finalTotal);
-            PayForGoodsActivity mcashfragment = new PayForGoodsActivity();
-            FragmentManager fragmentManager3 = getFragmentManager();
-            android.app.FragmentTransaction transaction3 = fragmentManager3.beginTransaction();
-            transaction3.add(R.id.linearlayouts, mcashfragment, "ALT");
-            mcashfragment.setArguments(bundle);
-            transaction3.commit();
-        } catch (Exception e) {
-
-        }
-    }
-
-
-    public void Frimipayments(String name) {
-        try {
-            com.RSPL.MEDIA.MediaMainScreen.b.putString("Current_name", "frimi");
-            Bundle bundle = new Bundle();
-            bundle.putString("GrandTotal", finalTotal);
-            FrimiActivity frimifragment = new FrimiActivity();
-            FragmentManager fragmentManager3 = getFragmentManager();
-            android.app.FragmentTransaction transaction3 = fragmentManager3.beginTransaction();
-            transaction3.add(R.id.linearlayouts, frimifragment, "ALT");
-            frimifragment.setArguments(bundle);
-            transaction3.commit();
-        } catch (Exception e) {
-
-        }
-    }
-
-
-    public void showBillAtBottom() {
-        try {
-
-
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
-            layoutParams.weight = 90.0f;
-            relativeVideoView.setLayoutParams(layoutParams);
-
-            LinearLayout.LayoutParams layoutParams1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
-            layoutParams1.weight = 10.0f;
-            linearBillView.setLayoutParams(layoutParams1);
-
-
-        } catch (Exception e) {
-
-
-        }
-    }
-
-
-    public static void setSummaryRow() {
-        DecimalFormat f = new DecimalFormat("##.00");
-        float Getval = adapter.getGrandTotal();
-        Log.d("&&&&&&&&", "" + Getval);
-        String GrandVal = f.format(Getval);
-
-        // tvProdPriceTotal.setText(GrandVal);
-
-        netpayable.setText(String.valueOf(Getval - Float.parseFloat(discount.getText().toString())));
-
-
-        Log.d("@@@@@@@@@@", "" + GrandTotal.getText().toString());
-        Log.d("Net@@@@@", "" + netpayable.getText().toString());
-
-
-    }
-
-    public static void setSummaryRows(Float dis) {
-        DecimalFormat f = new DecimalFormat("##.00");
-        float Getval = adapter.getGrandTotal();
-        Log.d("&&&&&&&&", "" + Getval);
-        String GrandVal = f.format(Getval);
-        Float tot = 0.0f;
-        tot = Float.valueOf(discount.getText().toString());
-        tot += dis;
-        GrandTotal.setText(GrandVal);
-        discount.setText(String.valueOf(tot));
-        netpayable.setText(String.valueOf(Getval - tot));
-
-        Log.d("@@@@@@@@@@", "" + GrandTotal.getText().toString());
-        Log.d("Net@@@@@", "" + netpayable.getText().toString());
-
-
-    }
-
+    private String mConnectedDeviceName = "";
     @SuppressLint("HandlerLeak")
     public final Handler mHandler = new Handler() {
         @Override
@@ -583,22 +310,291 @@ public class MediaMainScreen extends AppCompatActivity
             }
         }
     };
+    private String touchOn = null;
+    private String AdPlayUniqueId = null;
+    private SimpleDateFormat simpleDateFormat = null;
+    private TextView mUpdateTextView, mDownloadTextView;
+    private ArrayList<String> field6;
+    private ArrayList<Config> data6;
+    private ArrayList list;
+    private TextView tvProdName;
+    private TextView tvProdPrice;
+    private TextView tvProdCount;
+    public Handler Handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+
+            switch (msg.what) {
+
+                case MESSAGE_FROM_SERIAL_PORT:
+                    final String storename = msg.getData().getString(SERIAL_PORT_MESSAGE);
+                    Log.e("@@@@@@DATA", storename);
+                    if (storename.matches("")) {
+                        return;
+                    }
+                    try {
+                        JSONObject js = new JSONObject(storename);
+                        method = js.getString("Method");
+
+                        if (method.matches("Add")) {
+                            product = js.getString("Product");
+                            price = Float.valueOf(js.getString("Price"));
+                            count = js.getString("Count");
+                            total = Float.valueOf(js.getString("Total"));
+
+                            finalTotal = String.valueOf(total);
+                            salesprice = String.valueOf(price);
+
+                            tvProdName.setText(product);
+                            tvProdPrice.setText(salesprice);
+                            tvProdCount.setText(count);
+                            tvProdPriceTotal.setText(finalTotal);
+                            Log.e("%%%%%%Sales Price", salesprice);
+                            Log.e("%%%%%%Total", finalTotal);
+                        }
+                        if (method.matches("ShowBill")) {
+                            showBillAtBottom();
+                        }
+                        if (method.matches("FullScreen")) {
+                            fullScreenVideo();
+                        }
+                        if (method.matches("SPrice")) {
+                            sprice = js.getString("SPriceUpdate");
+                            total = Float.valueOf(js.getString("Total"));
+                            position = js.getString("Position");
+                            finalTotal = String.valueOf(total);
+                            salesprice = String.valueOf(sprice);
+                            tvProdPrice.setText(salesprice);
+                            tvProdPriceTotal.setText(finalTotal);
+                            Log.e("%%%%Sales Price", "after update" + salesprice);
+                            Log.e("%%%%%%Total", "after sales price update" + finalTotal);
+                        }
+                        if (method.matches("Delete")) {
+                            position = js.getString("PositionDelete");
+                            if (position != null) {
+                                deleteSalesProductfromList(Integer.parseInt(position));
+                                total = Float.valueOf(js.getString("Total"));
+                                count = js.getString("Count");
+                                product = js.getString("Product");
+                                price = Float.valueOf(js.getString("Price"));
+                                finalTotal = String.valueOf(total);
+                                salesprice = String.valueOf(price);
+                                tvProdPriceTotal.setText(finalTotal);
+                                tvProdCount.setText(count);
+                                tvProdName.setText(product);
+                                tvProdPrice.setText(salesprice);
+                                Log.e("%%%%%%Total", "after sales price update" + finalTotal);
+                            }
+
+                        }
+                        if (method.matches("ShowBill")) {
+                            String name = js.getString("STORENAME");
+                            // showBill(name);
+                            showBillAtBottom();
+                        }
+                        if (method.matches("Mcash")) {
+                            total = Float.valueOf(js.getString("Total"));
+                            finalTotal = String.valueOf(total);
+                            tvProdPriceTotal.setText(finalTotal);
+                            Log.e("%%GrandTotal", " grandtotal for mcash" + finalTotal);
+                            mcashpayforgoods(finalTotal);
+                        }
+                        if (method.matches("Frimi")) {
+                            total = Float.valueOf(js.getString("Total"));
+                            finalTotal = String.valueOf(total);
+                            tvProdPriceTotal.setText(finalTotal);
+                            Log.e("%%GrandTotal", " grandtotal for mcash" + finalTotal);
+                            Frimipayments(finalTotal);
+                        }
+                        if (method.matches("Genie")) {
+                            total = Float.valueOf(js.getString("Total"));
+                            finalTotal = String.valueOf(total);
+                            tvProdPriceTotal.setText(finalTotal);
+                            Log.e("%%GrandTotal", " grandtotal for mcash" + finalTotal);
+                            Geniepayments(finalTotal);
+                            //
+                        }
+                        if (method.matches("GenieQr")) {
+                            total = Float.valueOf(js.getString("Total"));
+                            finalTotal = String.valueOf(total);
+                            tvProdPriceTotal.setText(finalTotal);
+                            Log.e("%%GrandTotal", " grandtotal for mcash" + finalTotal);
+                            GenieQrpayments(finalTotal);
+                        }
+                        if (method.matches("GenieCancel")) {
+                            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+        }
+    };
+    private DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+    private String Addata;
+    private ArrayList<Config> data59;
+    private ArrayList<String> field59;
+    private String serialPortData = "";
+    private boolean isSerialPortConnected = false;
+
+    public static void setSummaryRow() {
+        DecimalFormat f = new DecimalFormat("##.00");
+        float Getval = adapter.getGrandTotal();
+        Log.d("&&&&&&&&", "" + Getval);
+        String GrandVal = f.format(Getval);
+
+        // tvProdPriceTotal.setText(GrandVal);
+
+        netpayable.setText(String.valueOf(Getval - Float.parseFloat(discount.getText().toString())));
+
+
+        Log.d("@@@@@@@@@@", "" + GrandTotal.getText().toString());
+        Log.d("Net@@@@@", "" + netpayable.getText().toString());
+
+
+    }
+
+    public static void setSummaryRows(Float dis) {
+        DecimalFormat f = new DecimalFormat("##.00");
+        float Getval = adapter.getGrandTotal();
+        Log.d("&&&&&&&&", "" + Getval);
+        String GrandVal = f.format(Getval);
+        Float tot = 0.0f;
+        tot = Float.valueOf(discount.getText().toString());
+        tot += dis;
+        GrandTotal.setText(GrandVal);
+        discount.setText(String.valueOf(tot));
+        netpayable.setText(String.valueOf(Getval - tot));
+
+        Log.d("@@@@@@@@@@", "" + GrandTotal.getText().toString());
+        Log.d("Net@@@@@", "" + netpayable.getText().toString());
+
+
+    }
+
+    public static void clearTotal() {
+
+        GrandTotal.setText("0.0");
+        discount.setText("0.0");
+        netpayable.setText("0.0");
+        customer_name.setText("");
+        if (adapter != null) {
+            adapter.clearAllRows();
+        }
+      /*  else if(salesReturnAdapter!=null){
+            salesReturnAdapter.clearAllRows();
+        }
+        else if(secondSalesReturnAdapterWithotInvoiceNumber!=null){
+            secondSalesReturnAdapterWithotInvoiceNumber.clearAllRows();
+        }*/
+        else {
+        }
+
+    }
+
+    public void showBill(String name) {
+        try {
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams.weight = 80.0f;
+            LinearLayout.LayoutParams layoutParams1 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams1.weight = 20.0f;
+            relativeVideoView.setLayoutParams(layoutParams);
+            linearBillView.setLayoutParams(layoutParams1);
+            //  store_Name.setText(name);
+
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void mcashpayforgoods(String name) {
+        try {
+
+            com.RSPL.MEDIA.MediaMainScreen.b.putString("Current_name", "mcash");
+            Bundle bundle = new Bundle();
+            bundle.putString("GrandTotal", finalTotal);
+            PayForGoodsActivity mcashfragment = new PayForGoodsActivity();
+            FragmentManager fragmentManager3 = getFragmentManager();
+            android.app.FragmentTransaction transaction3 = fragmentManager3.beginTransaction();
+            transaction3.add(R.id.linearlayouts, mcashfragment, "ALT");
+            mcashfragment.setArguments(bundle);
+            transaction3.commit();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void Frimipayments(String name) {
+        try {
+            com.RSPL.MEDIA.MediaMainScreen.b.putString("Current_name", "frimi");
+            Bundle bundle = new Bundle();
+            bundle.putString("GrandTotal", finalTotal);
+            FrimiActivity frimifragment = new FrimiActivity();
+            FragmentManager fragmentManager3 = getFragmentManager();
+            android.app.FragmentTransaction transaction3 = fragmentManager3.beginTransaction();
+            transaction3.replace(R.id.linearlayouts, frimifragment, "ALT");
+            frimifragment.setArguments(bundle);
+            transaction3.commit();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void Geniepayments(String name) {
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putString("GrandTotal", finalTotal);
+            GenieFragment geniefragment = new GenieFragment();
+            android.support.v4.app.FragmentManager fragmentManager4 = getSupportFragmentManager();
+            android.support.v4.app.FragmentTransaction transaction4 = fragmentManager4.beginTransaction();
+            transaction4.replace(R.id.linearlayouts, geniefragment, "ALT");
+            geniefragment.setArguments(bundle);
+            transaction4.commit();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void GenieQrpayments(String name) {
+        try {
+            com.RSPL.MEDIA.MediaMainScreen.b.putString("Current_name", "Genie");
+            Bundle bundle = new Bundle();
+            bundle.putString("GrandTotal", finalTotal);
+            GenieQrFragment genieqrfragment = new GenieQrFragment();
+            android.support.v4.app.FragmentManager fragmentManager4 = getSupportFragmentManager();
+            android.support.v4.app.FragmentTransaction transaction4 = fragmentManager4.beginTransaction();
+            transaction4.add(R.id.linearlayouts, genieqrfragment, "ALT");
+            genieqrfragment.setArguments(bundle);
+            transaction4.commit();
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void showBillAtBottom() {
+        try {
+
+
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
+            layoutParams.weight = 90.0f;
+            relativeVideoView.setLayoutParams(layoutParams);
+
+            LinearLayout.LayoutParams layoutParams1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
+            layoutParams1.weight = 10.0f;
+            linearBillView.setLayoutParams(layoutParams1);
+
+        } catch (Exception e) {
+
+
+        }
+    }
 
     public Boolean Connects() {
 
 
         return mSerialPortHelper.OpenSerialPort();
     }
-
-    //  private String data="";
-    int index = 0;
-    byte[] processedData;
-    List<Byte> dummyData = new ArrayList<>();
-    boolean keepProcessing = true;
-    private String serialPortData = "";
-    private boolean isSerialPortConnected = false;
-    static int countRev = 0, countSend = 0;
-    ImageButton mButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -611,10 +607,7 @@ public class MediaMainScreen extends AppCompatActivity
         tvProdPriceTotal = (TextView) findViewById(R.id.tv_idProdPriceTotal);
         mDataSyncBtn = (ImageButton) findViewById(R.id.dbPull);
         mButton = (ImageButton) findViewById(R.id.testingimage11);
-
         linearBillView = (LinearLayout) findViewById(R.id.id_linear_billview);
-
-
         mSerialPortHelper = new SerialPortHelper();
         if (!isSerialPortConnected) {
             if ((isSerialPortConnected = Connects())) {
@@ -622,7 +615,6 @@ public class MediaMainScreen extends AppCompatActivity
             }
         }
         read();
-
         mSerialPortHelper.mSerialPort.setOnserialportDataReceived(new SerialPortDataReceived() {
 
 
@@ -661,8 +653,6 @@ public class MediaMainScreen extends AppCompatActivity
                 }
             }
         });
-
-
         if (UsPrinter.getSerialPortState() == USBPrinter.ACTION_SERIALPORT_DISCONNECTED
                 || UsPrinter.getSerialPortState() == USBPrinter.ACTION_SERIALPORT_NOT_SUPPORTED) {
             Connect();
@@ -773,12 +763,18 @@ public class MediaMainScreen extends AppCompatActivity
                     transaction.add(R.id.linearlayouts,docMainActivity,"Doc");
                     transaction.commit()*/
                     ;
-                    GenieFragment frimifragment = new GenieFragment();
+                  /*  GenieFragment frimifragment = new GenieFragment();
                     android.support.v4.app.FragmentManager fragmentManager4 = getSupportFragmentManager();
                     android.support.v4.app.FragmentTransaction transaction4 = fragmentManager4.beginTransaction();
                     transaction4.add(R.id.linearlayouts, frimifragment, "ALT");
 
-                    transaction4.commit();
+                    transaction4.commit();*/
+                   /* GenieQrFragment frimifragment = new GenieQrFragment();
+                    android.support.v4.app.FragmentManager fragmentManager4 = getSupportFragmentManager();
+                    android.support.v4.app.FragmentTransaction transaction4 = fragmentManager4.beginTransaction();
+                    transaction4.add(R.id.linearlayouts, frimifragment, "ALT");
+
+                    transaction4.commit();*/
                 }
             });
 
@@ -826,7 +822,7 @@ public class MediaMainScreen extends AppCompatActivity
             startVideo();
             fullScreenVideo();
             deleteFiles();
-            hideNav();
+            // hideNav();
 
 
         } catch (Exception e) {
@@ -835,7 +831,6 @@ public class MediaMainScreen extends AppCompatActivity
 
 
     }
-
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -850,7 +845,6 @@ public class MediaMainScreen extends AppCompatActivity
 
         return true;
     }
-
 
     private void fetchVideoData() {
         mUpdateVideoValue = mFirebaseRemoteConfig.getString(LOADING_PHRASE_CONFIG_KEY);
@@ -879,7 +873,6 @@ public class MediaMainScreen extends AppCompatActivity
                 });
 
     }
-
 
     private void CheckForNewUpdate() {
         try {
@@ -1069,130 +1062,14 @@ public class MediaMainScreen extends AppCompatActivity
 
     }
 
-
-    private class ReadThread extends Thread {
-        private AtomicBoolean working;
-        private Handler mHandler;
-
-        ReadThread(Handler pHandler) {
-            working = new AtomicBoolean(true);
-            if (pHandler != null)
-                mHandler = pHandler;
-        }
-
-        private void notifyHandler(String message) {
-            Log.d("NGX", message);
-            if (mHandler != null) {
-                Message msg = mHandler.obtainMessage(MESSAGE_FROM_SERIAL_PORT);
-                Bundle bundle = new Bundle();
-                bundle.putString(SERIAL_PORT_MESSAGE, message);
-                msg.setData(bundle);
-                mHandler.sendMessage(msg);
-            }
-        }
-
-        boolean keepRunning = true;
-        List<Byte> byteList = new ArrayList<>();
-        int i = 0;
-        byte[] data;
-        String stri;
-        byte[] dummyData;
-
-        @Override
-        public void run() {
-            while (working.get()) {
-                try {
-                    while (keepRunning) {
-                        data = UsPrinter.readDataFromSerialPort();
-                        if (data != null) {
-                            for (byte a : data
-                                    ) {
-                                if (a == (byte) 0x03) {
-                                    keepRunning = false;
-                                    break;
-                                }
-                                Log.i("NGX", "byte added");
-                                byteList.add(a);
-                            }
-                        }
-                    }
-                    if (!keepRunning) {
-                        if (!byteList.isEmpty()) {
-                            // Log.i("NGX","list lenght "+ byteList.size());
-
-                            dummyData = new byte[byteList.size()];
-
-                            for (byte b : byteList
-                                    ) {
-
-                                dummyData[i++] = b;
-
-                            }
-                            i = 0;
-                            byteList.clear();
-                            ;
-
-                            stri = new String(dummyData);
-                            //txtReadData.append(str);
-                            Log.d("Received", stri);
-                            Log.d("Reading", stri);
-
-
-                            notifyHandler(stri);
-
-                        }
-                        keepRunning = true;
-                        Log.i("NGX", "SET TRUE FOR KEEPRUNNING");
-                        Thread.currentThread().sleep(1);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-        }
-
-
-        public void stopThread() {
-            working.set(false);
-            Log.i("NGX", "Data Read stopped");
-        }
-
-    }
-
     public void fullScreenVideo() {
         try {
-
-
             tvProdName.setText("PRODUCT_NAME");
             tvProdPrice.setText("P_PRICE");
             tvProdCount.setText("COUNT");
             tvProdPriceTotal.setText("TOTAL");
-
-
         } catch (Exception e) {
         }
-    }
-
-    public static void clearTotal() {
-
-        GrandTotal.setText("0.0");
-        discount.setText("0.0");
-        netpayable.setText("0.0");
-        customer_name.setText("");
-        if (adapter != null) {
-            adapter.clearAllRows();
-        }
-      /*  else if(salesReturnAdapter!=null){
-            salesReturnAdapter.clearAllRows();
-        }
-        else if(secondSalesReturnAdapterWithotInvoiceNumber!=null){
-            secondSalesReturnAdapterWithotInvoiceNumber.clearAllRows();
-        }*/
-        else {
-        }
-
     }
 
     /*=========================================================================================*/
@@ -1241,7 +1118,6 @@ public class MediaMainScreen extends AppCompatActivity
             videodir.mkdir();
         }
     }
-
 
     public void startVideo() {
 
@@ -1348,19 +1224,15 @@ public class MediaMainScreen extends AppCompatActivity
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     com.RSPL.MEDIA.MediaMainScreen.b.putString("Current_name", videoname);
-
-
                     AlertDialogfragment alertActivity = new AlertDialogfragment();
                     FragmentManager fragmentManager2 = getFragmentManager();
                     android.app.FragmentTransaction transaction2 = fragmentManager2.beginTransaction();
                     transaction2.replace(R.id.linearlayouts, alertActivity, "ALT");
                     transaction2.commit();
-
                     return false;
                 }
             });
         } else {
-
            /* mOverlapTextview.setVisibility(View.INVISIBLE);
             mOverlapTextview.clearAnimation();*/
             mVideoView.setOnTouchListener(new View.OnTouchListener() {
@@ -1370,12 +1242,9 @@ public class MediaMainScreen extends AppCompatActivity
                 }
             });
         }
-
     }
 
-
     public void createVideoFolder() {
-
         //  main_ad_video folder Name Specify Here
         File videodir = new File(Environment.getExternalStorageDirectory() + "/1464772267" + "/MainAd");
         Log.e("####******########", videodir.toString());
@@ -1392,28 +1261,10 @@ public class MediaMainScreen extends AppCompatActivity
                     }
                 }
             }
-
         } else {
             videodir.mkdir();
         }
-
-
     }
-
-
-    AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
-        public void onAudioFocusChange(int focusChange) {
-            if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-
-            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-
-            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                mAudManager.abandonAudioFocus(afChangeListener);
-            }
-        }
-    };
-
-
     public void startAutoScrolling() {
         if (scrollTimer == null) {
             scrollTimer = new Timer();
@@ -1424,7 +1275,6 @@ public class MediaMainScreen extends AppCompatActivity
 
                 }
             };
-
             if (scrollerSchedule != null) {
                 scrollerSchedule.cancel();
                 scrollerSchedule = null;
@@ -1435,11 +1285,9 @@ public class MediaMainScreen extends AppCompatActivity
                     runOnUiThread(Timer_Tick);
                 }
             };
-
             scrollTimer.schedule(scrollerSchedule, 10, 10);
         }
     }
-
 
     public void moveScrollView() {
         scrollPos = (int) (hsv1.getScrollX() + 1.0);
@@ -1451,7 +1299,6 @@ public class MediaMainScreen extends AppCompatActivity
 
 
     }
-
 
     public void stopAutoScrolling() {
         if (scrollTimer != null) {
@@ -2101,8 +1948,6 @@ public class MediaMainScreen extends AppCompatActivity
         }
     }
 
-    int insertion_index = 0;
-
     public void insert(Context context, ArrayList<String> array_vals, ArrayList<String> title, String TABLE_NAME, int row_index) {
         Log.d("Inside Insert", "Insertion starts for table name: " + TABLE_NAME);
         //myDataBase = context.openOrCreateDatabase("Db", Context.MODE_WORLD_WRITEABLE, null);         //Opens database in writable mode.
@@ -2129,7 +1974,6 @@ public class MediaMainScreen extends AppCompatActivity
 
 
     }
-
 
     private void getJSON() {
         class GetJSON extends AsyncTask<Void, Void, String> {
@@ -2395,9 +2239,6 @@ public class MediaMainScreen extends AppCompatActivity
 
     }
 
-// hardcode data transfer
-
-
     public void writeDatafrimi() {
         try {
 
@@ -2415,6 +2256,98 @@ public class MediaMainScreen extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+// hardcode data transfer
+
+    private class ReadThread extends Thread {
+        boolean keepRunning = true;
+        List<Byte> byteList = new ArrayList<>();
+        int i = 0;
+        byte[] data;
+        String stri;
+        byte[] dummyData;
+        private AtomicBoolean working;
+        private Handler mHandler;
+
+        ReadThread(Handler pHandler) {
+            working = new AtomicBoolean(true);
+            if (pHandler != null)
+                mHandler = pHandler;
+        }
+
+        private void notifyHandler(String message) {
+            Log.d("NGX", message);
+            if (mHandler != null) {
+                Message msg = mHandler.obtainMessage(MESSAGE_FROM_SERIAL_PORT);
+                Bundle bundle = new Bundle();
+                bundle.putString(SERIAL_PORT_MESSAGE, message);
+                msg.setData(bundle);
+                mHandler.sendMessage(msg);
+            }
+        }
+
+        @Override
+        public void run() {
+            while (working.get()) {
+                try {
+                    while (keepRunning) {
+                        data = UsPrinter.readDataFromSerialPort();
+                        if (data != null) {
+                            for (byte a : data
+                                    ) {
+                                if (a == (byte) 0x03) {
+                                    keepRunning = false;
+                                    break;
+                                }
+                                Log.i("NGX", "byte added");
+                                byteList.add(a);
+                            }
+                        }
+                    }
+                    if (!keepRunning) {
+                        if (!byteList.isEmpty()) {
+                            // Log.i("NGX","list lenght "+ byteList.size());
+
+                            dummyData = new byte[byteList.size()];
+
+                            for (byte b : byteList
+                                    ) {
+
+                                dummyData[i++] = b;
+
+                            }
+                            i = 0;
+                            byteList.clear();
+                            ;
+
+                            stri = new String(dummyData);
+                            //txtReadData.append(str);
+                            Log.d("Received", stri);
+                            Log.d("Reading", stri);
+
+
+                            notifyHandler(stri);
+
+                        }
+                        keepRunning = true;
+                        Log.i("NGX", "SET TRUE FOR KEEPRUNNING");
+                        Thread.currentThread().sleep(1);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        }
+
+
+        public void stopThread() {
+            working.set(false);
+            Log.i("NGX", "Data Read stopped");
+        }
+
     }
 
 }

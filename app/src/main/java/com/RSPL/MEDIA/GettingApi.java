@@ -14,8 +14,8 @@ public interface GettingApi {
     /* @GET("/Android/json.php")
  Call<ConfigItems> loadQuestions(@Query("tagged") String tags);*/
     @FormUrlEncoded
-    //@POST("FMCG_PROD_MEDIA_DOWNLOAD.jsp")
-    @POST("ProdMediaDownload.jsp")
+    @POST("FMCG_PROD_MEDIA_DOWNLOAD.jsp")
+    // @POST("ProdMediaDownload.jsp")
 
     //@POST("/Android/download1.php")
     Call<ConfigItems> load(@Field("STORE_ID") String STORE_ID, @Field("OTP") String OTP, @Query("tagged") String tags);
